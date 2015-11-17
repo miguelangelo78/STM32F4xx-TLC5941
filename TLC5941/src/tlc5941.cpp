@@ -8,6 +8,8 @@
 #include "port.h"
 #include <string.h>
 
+/* TLC5941 Datasheet: http://www.ti.com/lit/ds/symlink/tlc5941.pdf */
+
 /* Channel sizes and counts: */
 #define TLC5941_COUNT 1
 #define GS_CHANNEL_LEN 12 /* Each GS channel is 12 bits */
@@ -71,9 +73,7 @@ uint8_t * byte_to_binary(int x, int bitcount) {
 	return b;
 }
 
-TLC5941::TLC5941() {}
-
-void TLC5941::init(void) {
+TLC5941::TLC5941() {
 	init_gpio(GPIOD, MODE | SIN | SCLK | XLAT | BLANK, XERR);
 	PD(0);
 
@@ -95,16 +95,15 @@ void TLC5941::setDot(uint8_t channel, uint8_t dot_val) {
 	memcpy(gsData + startOff, new_dc_dat, DC_CHANNEL_LEN);
 }
 
-/* Sets brightness value (from 0 to 4096) for a certain channel */
+/* Sets brightness value (from 0 to 4095, 12 BITS (IMPORTANT)) for a certain channel */
 void TLC5941::setChannel(uint8_t channel, uint16_t brightness) {
 	int startOff = GS_SIZE - (channel * GS_CHANNEL_LEN) - GS_CHANNEL_LEN;
 	uint8_t * new_gs_dat = byte_to_binary(brightness, GS_CHANNEL_LEN);
 	memcpy(gsData + startOff, new_gs_dat, GS_CHANNEL_LEN);
 }
 
-/* Updates the chip by outputting the DC and GS data */
+/* Updates the chip by outputting the GS data */
 void TLC5941::update() {
-	sendDot();
 	sendGS();
 }
 

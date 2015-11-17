@@ -14,7 +14,6 @@ class TLC5941 {
 public:
 	TLC5941();
 
-	void init(void);
 	inline uint8_t getXERR();
 	/* Sets dot correction value (from 0 to 64) for a certain channel */
 	void setDot(uint8_t channel, uint8_t dot_val);
