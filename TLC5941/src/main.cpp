@@ -1,4 +1,5 @@
 #include "tlc5941.h"
+#include <vector>
 
 class TLCRGB {
 public:
@@ -7,13 +8,19 @@ public:
 
 	typedef struct {
 		/* Float allows us to have more precision on the control of the brightness,
-		 * although it is casted into uint16_t in the end */
+		 * however it is casted into uint16_t in the end */
 		float r = 0, g = 0, b = 0;
 	} rgb_t;
 
 	rgb_t rgb;
 
 	TLCRGB(int rgb_index) : index(rgb_index), rgb_off(index * 3) { }
+	TLCRGB() {}
+
+	void init(int rgb_index) {
+		index = rgb_index;
+		rgb_off = index * 3;
+	}
 
 	void update() {
 		tlc.setChannel(rgb_off, (uint16_t)rgb.r);
@@ -57,16 +64,23 @@ private:
 	TLC5941 tlc;
 };
 
+#define LED_COUNT 3
+TLCRGB leds[LED_COUNT];
+
+#define update_all_leds() for(int i = 0; i < LED_COUNT; i++) leds[i].update();
+
 int main(void)
 {
 	SystemInit();
-	TLCRGB led(0);
+
+	for(int i = 0; i < LED_COUNT; i++)
+		leds[i].init(i);
 
 	for(;;) {
-		INC(led.rgb.r, 0.5f, 0xFF, 0);
-		INC(led.rgb.g, 0.05f, 0xFF, 0);
-		INC(led.rgb.b, 0.005f, 0xFF, 0);
+		INC(leds[0].rgb.r, 0.5f, 0xFF, 0);
+		INC(leds[1].rgb.g, 0.5f, 0xFF, 0);
+		INC(leds[2].rgb.b, 0.5f, 0xFF, 0);
 
-		led.update();
+		update_all_leds();
 	}
 }
