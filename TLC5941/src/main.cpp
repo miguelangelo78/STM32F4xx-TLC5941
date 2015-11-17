@@ -1,5 +1,5 @@
 #include "tlc5941.h"
-#include <vector>
+#include <stdlib.h>
 
 class TLCRGB {
 public:
@@ -64,23 +64,50 @@ private:
 	TLC5941 tlc;
 };
 
-#define LED_COUNT 3
-TLCRGB leds[LED_COUNT];
 
-#define update_all_leds() for(int i = 0; i < LED_COUNT; i++) leds[i].update();
+void led_test() {
+	#define LED_COUNT 3
+	TLCRGB leds[LED_COUNT];
 
-int main(void)
-{
-	SystemInit();
+	#define update_all_leds() for(int i = 0; i < LED_COUNT; i++) leds[i].update();
 
 	for(int i = 0; i < LED_COUNT; i++)
 		leds[i].init(i);
 
 	for(;;) {
-		INC(leds[0].rgb.r, 0.5f, 0xFF, 0);
-		INC(leds[1].rgb.g, 0.5f, 0xFF, 0);
-		INC(leds[2].rgb.b, 0.5f, 0xFF, 0);
+		for(int i=0;i<LED_COUNT;i++) {
+			switch(rand() % 3) {
+			case 0:
+				if(rand()%5 > 1) {
+					INC(leds[i].rgb.r, rand() % 3, rand()%0xFF+0x7F, rand()%0xFF);
+				} else {
+					DEC(leds[i].rgb.r, rand() % 3, rand()%0xFF+0x7F, rand()%0xFF);
+				}
+				break;
+			case 1:
+				if(rand()%5 > 1) {
+					INC(leds[i].rgb.g, rand() % 3,rand()%0xFF+0x7F, rand()%0xFF);
+				} else {
+					DEC(leds[i].rgb.g, rand() % 3,rand()%0xFF+0x7F, rand()%0xFF);
+				}
+				break;
+			case 2:
+				if(rand()%5 > 1) {
+					INC(leds[i].rgb.b, rand() % 3, rand()%0xFF+0x7F, rand()%0xFF);
+				} else {
+					DEC(leds[i].rgb.b, rand() % 3, rand()%0xFF+0x7F, rand()%0xFF);
+				}
+				break;
+			}
+		}
 
 		update_all_leds();
 	}
+}
+
+int main(void)
+{
+	SystemInit();
+
+	led_test();
 }
