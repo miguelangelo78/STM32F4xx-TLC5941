@@ -90,27 +90,23 @@ TLC5941::TLC5941() {
 	this_tlc = this;
 }
 
-
 uint8_t TLC5941::getXERR() {
 	return readpin(XERR);
 }
 
 /* Sets dot correction value (from 0 to 64) for a certain channel */
-
 void TLC5941::setDot(uint8_t channel, uint8_t dot_val) {
 	dcData[(CHANNEL_COUNT - 1) - channel] = dot_val;
 }
 
 /* Sets brightness value (from 0 to 4095, 12 BITS (IMPORTANT)) for a certain channel */
-
 void TLC5941::setChannel(uint8_t channel, uint16_t brightness) {
 	gsData[(CHANNEL_COUNT - 1) - channel] = brightness;
 }
 
-/* Send dot correction data: */
-
 #define fetch_bit(indexed_array, nthbit) (indexed_array & (1 << nthbit)) >> nthbit;
 
+/* Send dot correction data: */
 void TLC5941::sendDot(void) {
 	uint8_t channel = 0;
 	int16_t mask = DC_CHANNEL_LEN - 1;
