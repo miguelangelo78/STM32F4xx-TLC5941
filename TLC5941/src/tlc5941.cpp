@@ -151,6 +151,7 @@ void TLC5941::sendGS(void) {
 	/* End of GS cycle */
 	PULSE(BLANK);
 	PULSE(XLAT);
+	PULSE(SCLK);
 }
 
 /* Updates the chip by outputting the GS data */
