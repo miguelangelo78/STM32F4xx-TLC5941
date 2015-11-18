@@ -29,8 +29,11 @@ public:
 
 	void init(int rgb_index);
 
-	void update();
-	void update(rgb_t rgb_struct);
+	void updateColor(); /* Updates the color of the LED but doesn't output to the TLC5941 Device */
+	void updateColor(rgb_t rgb_struct); /* Updates the color of the LED but doesn't output to the TLC5941 Device */
+	void updateAll();
+	void updateAll(rgb_t rgb_struct);
+	static void updateTLC5941(); /* Updates the color of the LED to the TLC5941 Device */
 
 	void set(rgb_t rgb_struct);
 	void set(uint16_t r, uint16_t g, uint16_t b);

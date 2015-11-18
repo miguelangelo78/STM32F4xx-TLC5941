@@ -25,6 +25,8 @@
 #define SET_BLANK(blank) PDB(BLANK, blank)
 #define SET_MODE(md) PDB(MODE, md)
 
+TLC5941 * this_tlc; /* Used for statically updating the device. */
+
 /* There is no need for hardcoding all the 1's and 0's here. This is here only for reference purpose */
 /* Dot correction data: */
 uint8_t dcData[TLC5941_COUNT * CHANNEL_COUNT];
@@ -85,6 +87,7 @@ TLC5941::TLC5941() {
 
 	/* Send default dot correction data: */
 	sendDot();
+	this_tlc = this;
 }
 
 
@@ -158,8 +161,7 @@ void TLC5941::sendGS(void) {
 	PULSE(SCLK);
 }
 
-
 /* Updates the chip by outputting the GS data */
 void TLC5941::update() {
-	sendGS();
+	this_tlc->sendGS();
 }

@@ -14,13 +14,13 @@ class TLC5941 {
 public:
 	TLC5941();
 
-	inline uint8_t getXERR();
+	uint8_t getXERR();
 	/* Sets dot correction value (from 0 to 64) for a certain channel */
 	void setDot(uint8_t channel, uint8_t dot_val);
 	/* Sets brightness value (from 0 to 4096) for a certain channel */
 	void setChannel(uint8_t channel, uint16_t brightness);
 	/* Updates the chip by outputting the GS data */
-	void update();
+	static void update();
 
 private:
 	enum TLCPINS {

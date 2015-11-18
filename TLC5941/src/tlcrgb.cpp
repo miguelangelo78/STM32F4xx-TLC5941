@@ -10,21 +10,37 @@
 TLCRGB::TLCRGB(int rgb_index) : index(rgb_index), rgb_off(index * 3) { }
 TLCRGB::TLCRGB() {}
 
+static TLC5941 * tlc_device;
+
 void TLCRGB::init(int rgb_index) {
 	index = rgb_index;
 	rgb_off = index * 3;
+	tlc_device = &tlc;
 }
 
-void TLCRGB::update() {
+void TLCRGB::updateTLC5941() {
+	tlc_device->update();
+}
+
+void TLCRGB::updateColor() {
 	tlc.setChannel(rgb_off, (uint16_t)rgb.r);
 	tlc.setChannel(rgb_off + 1, (uint16_t)rgb.g);
 	tlc.setChannel(rgb_off + 2, (uint16_t)rgb.b);
-	tlc.update();
 }
 
-void TLCRGB::update(rgb_t rgb_struct) {
+void TLCRGB::updateColor(rgb_t rgb_struct) {
 	set(rgb_struct);
-	update();
+	updateColor();
+}
+
+void TLCRGB::updateAll() {
+	updateColor();
+	updateTLC5941();
+}
+
+void TLCRGB::updateAll(rgb_t rgb_struct) {
+	updateColor(rgb_struct);
+	updateTLC5941();
 }
 
 void TLCRGB::set(rgb_t rgb_struct) {
@@ -59,7 +75,7 @@ void TLCRGB::led_test() {
 	#define LED_COUNT 3
 	TLCRGB leds[LED_COUNT];
 
-	#define update_all_leds() for(int i = 0; i < LED_COUNT; i++) leds[i].update();
+	#define update_all_leds() for(int i = 0; i < LED_COUNT; i++) leds[i].updateColor();
 
 	for(int i = 0; i < LED_COUNT; i++)
 		leds[i].init(i);
@@ -92,6 +108,7 @@ void TLCRGB::led_test() {
 		}
 
 		update_all_leds();
+		TLC5941::update();
 	}
 }
 
