@@ -135,27 +135,22 @@ void TLC5941::sendGS(void) {
 
 	/* Start of GS cycle: */
 	SET_MODE(MD_GS);
-	SET_BLANK(0);
 
-	for(uint16_t gsclk_ctr = 0; gsclk_ctr <= 4095; gsclk_ctr++)
-		if(gsclk_ctr <= TLC5941_COUNT * GS_SIZE - 1) {
-			char val = fetch_bit(gsData[channel], mask);
+	for(uint16_t gsclk_ctr = 0; gsclk_ctr <= TLC5941_COUNT * GS_SIZE - 1; gsclk_ctr++) { /* gsclk_ctr shouldn't go as far as 4095 */
+		char val = fetch_bit(gsData[channel], mask);
 
-			if(--mask < 0) {
-				mask = GS_CHANNEL_LEN - 1;
-				channel++;
-			}
-
-			PDB(SIN, val);
-			PULSE(SCLK);
-		} else {
-			break;
+		if(--mask < 0) {
+			mask = GS_CHANNEL_LEN - 1;
+			channel++;
 		}
 
+		PDB(SIN, val);
+		PULSE(SCLK);
+	}
+
 	/* End of GS cycle */
-	SET_BLANK(1);
+	PULSE(BLANK);
 	PULSE(XLAT);
-	PULSE(SCLK);
 }
 
 /* Updates the chip by outputting the GS data */
