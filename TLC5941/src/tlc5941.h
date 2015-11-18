@@ -19,12 +19,10 @@ public:
 	void setDot(uint8_t channel, uint8_t dot_val);
 	/* Sets brightness value (from 0 to 4096) for a certain channel */
 	void setChannel(uint8_t channel, uint16_t brightness);
-	/* Updates the chip by outputting the DC and GS data */
+	/* Updates the chip by outputting the GS data */
 	void update();
 
 private:
-	uint8_t mode; /* Keeps track of the value outputted into the MODE pin */
-
 	enum TLCPINS {
 		MODE 	= GPIO_Pin_0, /* 0 = In Dot Correction Mode | 1 = In Grayscale Mode (Output) */
 		SIN 	= GPIO_Pin_1, /* Serial input to TLC5941 (Output) */

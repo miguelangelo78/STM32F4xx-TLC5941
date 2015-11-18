@@ -4,6 +4,7 @@
  *  Created on: Nov 17, 2015
  *      Author: Miguel
  */
+
 #include "tlc5941.h"
 #include "port.h"
 #include <string.h>
@@ -12,66 +13,64 @@
 
 /* Channel sizes and counts: */
 #define TLC5941_COUNT 1
+#define CHANNEL_COUNT 16 /* How many channels per TLC5941 chip */
 #define GS_CHANNEL_LEN 12 /* Each GS channel is 12 bits */
 #define DC_CHANNEL_LEN 6 /* Each DC channel is 6 bits */
-#define GS_SIZE 192 /* Total size in bits of Grayscale PWM control */
-#define DC_SIZE 96 /* Total size in bits of Dot Correction */
+#define GS_SIZE GS_CHANNEL_LEN * CHANNEL_COUNT /* Total size in bits of Grayscale PWM control */
+#define DC_SIZE DC_CHANNEL_LEN * CHANNEL_COUNT /* Total size in bits of Dot Correction */
 
 /* Helper macros for controlling the GPIO: */
 #define readpin(pin) PDBI((pin)) /* Reads state of pin, same as PDBI, but forcing the port */
 #define PULSE(pin) { PDB(pin, 1); PDB(pin, 0); } /* Send a pulse to a pin */
 #define SET_BLANK(blank) PDB(BLANK, blank)
-#define SET_MODE(md) { PDB(MODE, md); mode = md; }
+#define SET_MODE(md) PDB(MODE, md)
 
-/* There is no need for hardcoding all the 1's and 0's here. This is here for reference purpose */
+/* There is no need for hardcoding all the 1's and 0's here. This is here only for reference purpose */
 /* Dot correction data: */
-uint8_t dcData[TLC5941_COUNT * DC_SIZE] = {
-	// MSB         LSB
-	1, 1, 1, 1, 1, 1,  // Channel 15
-	1, 1, 1, 1, 1, 1,  // Channel 14
-	1, 1, 1, 1, 1, 1,  // Channel 13
-	1, 1, 1, 1, 1, 1,  // Channel 12
-	1, 1, 1, 1, 1, 1,  // Channel 11
-	1, 1, 1, 1, 1, 1,  // Channel 10
-	1, 1, 1, 1, 1, 1,  // Channel 9
-	1, 1, 1, 1, 1, 1,  // Channel 8
-	1, 1, 1, 1, 1, 1,  // Channel 7
-	1, 1, 1, 1, 1, 1,  // Channel 6
-	1, 1, 1, 1, 1, 1,  // Channel 5
-	1, 1, 1, 1, 1, 1,  // Channel 4
-	1, 1, 1, 1, 1, 1,  // Channel 3
-	1, 1, 1, 1, 1, 1,  // Channel 2
-	1, 1, 1, 1, 1, 1,  // Channel 1
-	1, 1, 1, 1, 1, 1,  // Channel 0
-};
+uint8_t dcData[TLC5941_COUNT * CHANNEL_COUNT];
+/* Example representation:
+ = {
+	 // MSB LSB
+	0b111111, // Channel 15
+	0b111111, // Channel 14
+	0b111111, // Channel 13
+	0b111111, // Channel 12
+	0b111111, // Channel 11
+	0b111111, // Channel 10
+	0b111111, // Channel 9
+	0b111111, // Channel 8
+	0b111111, // Channel 7
+	0b111111, // Channel 6
+	0b111111, // Channel 5
+	0b111111, // Channel 4
+	0b111111, // Channel 3
+	0b111111, // Channel 2
+	0b111111, // Channel 1
+	0b111111  // Channel 0
+}; */
 
 /* Grayscale data */
-uint8_t gsData[TLC5941_COUNT * GS_SIZE] = {
-	// MSB                           LSB
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // Channel 15
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // Channel 14
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // Channel 13
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // Channel 12
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // Channel 11
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // Channel 10
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // Channel 9
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // Channel 8
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // Channel 7
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // Channel 6
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // Channel 5
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // Channel 4
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // Channel 3
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // Channel 2
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // Channel 1
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // Channel 0
-};
-
-uint8_t * byte_to_binary(int x, int bitcount) {
-	static uint8_t b[GS_CHANNEL_LEN]; /* I picked the biggest channel */
-	for (int z = (1 << bitcount), i = 0; z > 0; z >>= 1)
-		b[i++] = (x & z) == z;
-	return b;
-}
+uint16_t gsData[TLC5941_COUNT * CHANNEL_COUNT];
+/* Example representation:
+ = {
+	// MSB     LSB
+	0b000000000000, // Channel 15
+	0b000000000000, // Channel 14
+	0b000000000000, // Channel 13
+	0b000000000000, // Channel 12
+	0b000000000000, // Channel 11
+	0b000000000000, // Channel 10
+	0b000000000000, // Channel 9
+	0b000000000000, // Channel 8
+	0b000000000000, // Channel 7
+	0b000000000000, // Channel 6
+	0b000000000000, // Channel 5
+	0b000000000000, // Channel 4
+	0b000000000000, // Channel 3
+	0b000000000000, // Channel 2
+	0b000000000000, // Channel 1
+	0b000000000000  // Channel 0
+};*/
 
 TLC5941::TLC5941() {
 	init_gpio(GPIOD, MODE | SIN | SCLK | XLAT | BLANK, XERR);
@@ -80,70 +79,87 @@ TLC5941::TLC5941() {
 	SET_MODE(MD_DC);
 	SET_BLANK(1);
 
+	/* Default dot correction and gs data: */
+	memset(dcData, 0x3F, TLC5941_COUNT * CHANNEL_COUNT);
+	memset(gsData, 0, TLC5941_COUNT * CHANNEL_COUNT);
+
 	/* Send default dot correction data: */
 	sendDot();
 }
+
 
 uint8_t TLC5941::getXERR() {
 	return readpin(XERR);
 }
 
 /* Sets dot correction value (from 0 to 64) for a certain channel */
+
 void TLC5941::setDot(uint8_t channel, uint8_t dot_val) {
-	int startOff = DC_SIZE - (channel * DC_CHANNEL_LEN) - DC_CHANNEL_LEN;
-	uint8_t * new_dc_dat = byte_to_binary(dot_val, DC_CHANNEL_LEN);
-	memcpy(gsData + startOff, new_dc_dat, DC_CHANNEL_LEN);
+	dcData[(CHANNEL_COUNT - 1) - channel] = dot_val;
 }
 
 /* Sets brightness value (from 0 to 4095, 12 BITS (IMPORTANT)) for a certain channel */
-void TLC5941::setChannel(uint8_t channel, uint16_t brightness) {
-	int startOff = GS_SIZE - (channel * GS_CHANNEL_LEN) - GS_CHANNEL_LEN;
-	uint8_t * new_gs_dat = byte_to_binary(brightness, GS_CHANNEL_LEN);
-	memcpy(gsData + startOff, new_gs_dat, GS_CHANNEL_LEN);
-}
 
-/* Updates the chip by outputting the GS data */
-void TLC5941::update() {
-	sendGS();
+void TLC5941::setChannel(uint8_t channel, uint16_t brightness) {
+	gsData[(CHANNEL_COUNT - 1) - channel] = brightness;
 }
 
 /* Send dot correction data: */
+
+#define fetch_bit(indexed_array, nthbit) (indexed_array & (1 << nthbit)) >> nthbit;
+
 void TLC5941::sendDot(void) {
+	uint8_t channel = 0;
+	int16_t mask = DC_CHANNEL_LEN - 1;
+
 	SET_MODE(MD_DC);
 
-	for(uint8_t ctr = 0;;) {
-		if(ctr > TLC5941_COUNT * DC_SIZE - 1) {
-			PULSE(XLAT);
-			break;
-		} else {
-			char val = dcData[ctr++] ? 1 : 0;
-			PDB(SIN, val);
-			PULSE(SCLK);
+	for(uint8_t ctr = 0; ctr <= TLC5941_COUNT * DC_SIZE - 1; ctr++) {
+		char val = fetch_bit(dcData[channel], mask);
+
+		if(--mask < 0) {
+			mask = DC_CHANNEL_LEN - 1;
+			channel++;
 		}
+
+		PDB(SIN, val);
+		PULSE(SCLK);
 	}
+	PULSE(XLAT);
 }
 
 /* Send grayscale data: */
 void TLC5941::sendGS(void) {
-	uint8_t first_cycle_fl = 0;
-	uint8_t data_ctr = 0;
+	uint8_t channel = 0;
+	int16_t mask = GS_CHANNEL_LEN - 1;
 
-	if(mode) {
-		SET_MODE(MD_GS);
-		first_cycle_fl = 1;
-	}
-
+	/* Start of GS cycle: */
+	SET_MODE(MD_GS);
 	SET_BLANK(0);
+
 	for(uint16_t gsclk_ctr = 0; gsclk_ctr <= 4095; gsclk_ctr++)
-		if(!(data_ctr > TLC5941_COUNT * GS_SIZE - 1)) {
-			char val = gsData[data_ctr++] ? 1 : 0;
+		if(gsclk_ctr <= TLC5941_COUNT * GS_SIZE - 1) {
+			char val = fetch_bit(gsData[channel], mask);
+
+			if(--mask < 0) {
+				mask = GS_CHANNEL_LEN - 1;
+				channel++;
+			}
+
 			PDB(SIN, val);
 			PULSE(SCLK);
+		} else {
+			break;
 		}
 
 	/* End of GS cycle */
 	SET_BLANK(1);
 	PULSE(XLAT);
-	if(first_cycle_fl)
 	PULSE(SCLK);
+}
+
+
+/* Updates the chip by outputting the GS data */
+void TLC5941::update() {
+	sendGS();
 }
