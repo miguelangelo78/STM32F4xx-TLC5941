@@ -10,16 +10,11 @@
 TLCRGB::TLCRGB(int rgb_index) : index(rgb_index), rgb_off(index * 3) { }
 TLCRGB::TLCRGB() {}
 
-static TLC5941 * tlc_device;
+TLC5941 TLCRGB::tlc;
 
 void TLCRGB::init(int rgb_index) {
 	index = rgb_index;
 	rgb_off = index * 3;
-	tlc_device = &tlc;
-}
-
-void TLCRGB::updateTLC5941() {
-	tlc_device->update();
 }
 
 void TLCRGB::updateColor() {
@@ -35,12 +30,12 @@ void TLCRGB::updateColor(rgb_t rgb_struct) {
 
 void TLCRGB::updateAll() {
 	updateColor();
-	updateTLC5941();
+	TLC5941::update();
 }
 
 void TLCRGB::updateAll(rgb_t rgb_struct) {
 	updateColor(rgb_struct);
-	updateTLC5941();
+	TLC5941::update();
 }
 
 void TLCRGB::set(rgb_t rgb_struct) {

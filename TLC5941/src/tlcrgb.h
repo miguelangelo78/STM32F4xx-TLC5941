@@ -33,7 +33,6 @@ public:
 	void updateColor(rgb_t rgb_struct); /* Updates the color of the LED but doesn't output to the TLC5941 Device */
 	void updateAll();
 	void updateAll(rgb_t rgb_struct);
-	static void updateTLC5941(); /* Updates the color of the LED to the TLC5941 Device */
 
 	void set(rgb_t rgb_struct);
 	void set(uint16_t r, uint16_t g, uint16_t b);
@@ -48,7 +47,7 @@ public:
 private:
 	int index;
 	char rgb_off; /* RGB offset on the TLC5941 */
-	TLC5941 tlc;
+	static TLC5941 tlc; /* Must be static. We have only 1 device for all rgb leds. */
 };
 
 #endif /* TLCRGB_H_ */
