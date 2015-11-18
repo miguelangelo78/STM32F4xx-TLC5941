@@ -14,6 +14,7 @@
 /* Channel sizes and counts: */
 #define TLC5941_COUNT 1
 #define CHANNEL_COUNT 16 /* How many channels per TLC5941 chip */
+#define TLC5941_DATASIZE TLC5941_COUNT * CHANNEL_COUNT
 #define GS_CHANNEL_LEN 12 /* Each GS channel is 12 bits */
 #define DC_CHANNEL_LEN 6 /* Each DC channel is 6 bits */
 #define GS_SIZE GS_CHANNEL_LEN * CHANNEL_COUNT /* Total size in bits of Grayscale PWM control */
@@ -29,7 +30,7 @@ TLC5941 * this_tlc; /* Used for statically updating the device. */
 
 /* There is no need for hardcoding all the 1's and 0's here. This is here only for reference purpose */
 /* Dot correction data: */
-uint8_t dcData[TLC5941_COUNT * CHANNEL_COUNT];
+uint8_t dcData[TLC5941_DATASIZE];
 /* Example representation:
  = {
 	 // MSB LSB
@@ -52,7 +53,7 @@ uint8_t dcData[TLC5941_COUNT * CHANNEL_COUNT];
 }; */
 
 /* Grayscale data */
-uint16_t gsData[TLC5941_COUNT * CHANNEL_COUNT];
+uint16_t gsData[TLC5941_DATASIZE];
 /* Example representation:
  = {
 	// MSB     LSB
@@ -82,8 +83,8 @@ TLC5941::TLC5941() {
 	SET_BLANK(1);
 
 	/* Default dot correction and gs data: */
-	memset(dcData, 0x3F, TLC5941_COUNT * CHANNEL_COUNT);
-	memset(gsData, 0, TLC5941_COUNT * CHANNEL_COUNT);
+	memset(dcData, 0x3F, TLC5941_DATASIZE);
+	memset(gsData, 0, TLC5941_DATASIZE);
 
 	/* Send default dot correction data: */
 	sendDot();
