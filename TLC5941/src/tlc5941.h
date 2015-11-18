@@ -15,9 +15,9 @@ public:
 	TLC5941();
 
 	uint8_t getXERR();
-	/* Sets dot correction value (from 0 to 64) for a certain channel */
+	/* Sets dot correction value (from 0 to 63) for a certain channel */
 	void setDot(uint8_t channel, uint8_t dot_val);
-	/* Sets brightness value (from 0 to 4096) for a certain channel */
+	/* Sets brightness value (from 0 to 4095) for a certain channel */
 	void setChannel(uint8_t channel, uint16_t brightness);
 	/* Updates the chip by outputting the GS data */
 	static void update();

@@ -40,10 +40,9 @@ public:
 	void setG(uint16_t g);
 	void setB(uint16_t b);
 
-	static void led_test();
-
 	TLC5941 getTLC5941();
 
+	static void led_test();
 private:
 	int index;
 	char rgb_off; /* RGB offset on the TLC5941 */

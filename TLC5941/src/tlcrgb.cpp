@@ -106,4 +106,3 @@ void TLCRGB::led_test() {
 		TLC5941::update();
 	}
 }
-

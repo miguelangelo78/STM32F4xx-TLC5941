@@ -94,7 +94,7 @@ uint8_t TLC5941::getXERR() {
 	return readpin(XERR);
 }
 
-/* Sets dot correction value (from 0 to 64) for a certain channel */
+/* Sets dot correction value (from 0 to 63) for a certain channel */
 void TLC5941::setDot(uint8_t channel, uint8_t dot_val) {
 	dcData[(CHANNEL_COUNT - 1) - channel] = dot_val;
 }
