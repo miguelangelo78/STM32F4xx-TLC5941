@@ -9,10 +9,10 @@
 #define PORT_H_
 
 /* Port handling macros: */
-#define PD(val) GPIOD->ODR = (BitAction)val /* Output to port */
-#define PDB(pin, val) GPIO_WriteBit(GPIOD, (pin), ((BitAction)val)) /* Output to port's pin */
-#define PDI(pin) GPIO_ReadInputData(GPIOD) /* Read entire port */
-#define PDBI(pin) GPIO_ReadInputDataBit(GPIOD, (pin)) /* Read port's pin */
+#define PA(val) GPIOA->ODR = (BitAction)val /* Output to port */
+#define PAB(pin, val) GPIO_WriteBit(GPIOA, (pin), ((BitAction)val)) /* Output to port's pin */
+#define PAI(pin) GPIO_ReadInputData(GPIOA) /* Read entire port */
+#define PABI(pin) GPIO_ReadInputDataBit(GPIOA, (pin)) /* Read port's pin */
 
 /* General purpose Port initializer function (one port at a time): */
 inline void init_gpio(GPIO_TypeDef * gpio, uint32_t out_pins, uint32_t in_pins) {
@@ -31,8 +31,8 @@ inline void init_gpio(GPIO_TypeDef * gpio, uint32_t out_pins, uint32_t in_pins) 
 	port_in.GPIO_PuPd = GPIO_PuPd_DOWN;
 	port_in.GPIO_Speed = GPIO_Speed_100MHz;
 
-	/* Initialize PORTD only: */
-	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);
+	/* Initialize PORTA only: */
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
 
 	if(out_pins) /* Won't initialize if out_pins is 0 */
 		GPIO_Init(gpio, &port_out);

@@ -21,10 +21,10 @@
 #define DC_SIZE DC_CHANNEL_LEN * CHANNEL_COUNT /* Total size in bits of Dot Correction */
 
 /* Helper macros for controlling the GPIO: */
-#define readpin(pin) PDBI((pin)) /* Reads state of pin, same as PDBI, but forcing the port */
-#define PULSE(pin) { PDB(pin, 1); PDB(pin, 0); } /* Send a pulse to a pin */
-#define SET_BLANK(blank) PDB(BLANK, blank)
-#define SET_MODE(md) PDB(MODE, md)
+#define readpin(pin) PABI((pin)) /* Reads state of pin, same as PABI, but forcing the port */
+#define PULSE(pin) { PAB(pin, 1); PAB(pin, 0); } /* Send a pulse to a pin */
+#define SET_BLANK(blank) PAB(BLANK, blank)
+#define SET_MODE(md) PAB(MODE, md)
 
 TLC5941 * this_tlc; /* Used for statically updating the device. */
 
@@ -76,8 +76,8 @@ uint16_t gsData[TLC5941_DATASIZE];
 };*/
 
 TLC5941::TLC5941() {
-	init_gpio(GPIOD, MODE | SIN | SCLK | XLAT | BLANK, XERR);
-	PD(0);
+	init_gpio(GPIOA, MODE | SIN | SCLK | XLAT | BLANK, XERR);
+	PA(0);
 
 	SET_MODE(MD_DC);
 	SET_BLANK(1);
@@ -122,7 +122,7 @@ void TLC5941::sendDot(void) {
 			channel++;
 		}
 
-		PDB(SIN, val);
+		PAB(SIN, val);
 		PULSE(SCLK);
 	}
 	PULSE(XLAT);
@@ -144,7 +144,7 @@ void TLC5941::sendGS(void) {
 			channel++;
 		}
 
-		PDB(SIN, val);
+		PAB(SIN, val);
 		PULSE(SCLK);
 	}
 

@@ -24,12 +24,12 @@ public:
 
 private:
 	enum TLCPINS {
-		MODE 	= GPIO_Pin_0, /* 0 = In Dot Correction Mode | 1 = In Grayscale Mode (Output) */
-		SIN 	= GPIO_Pin_1, /* Serial input to TLC5941 (Output) */
-		SCLK 	= GPIO_Pin_2, /* Serial clock (Output) */
-		XLAT 	= GPIO_Pin_3, /* Serial data latch into the registers (Output) */
-		BLANK 	= GPIO_Pin_4, /* Turns off LEDS and signals the start of the Grayscale cycle (Output) */
-		XERR 	= GPIO_Pin_5  /* XERR signals LED overheating (Input) */
+		MODE 	= GPIO_Pin_4, /* 0 = In Dot Correction Mode | 1 = In Grayscale Mode (Output) */
+		SIN 	= GPIO_Pin_7, /* Serial input to TLC5941 (Output) */
+		SCLK 	= GPIO_Pin_5, /* Serial clock (Output) */
+		XLAT 	= GPIO_Pin_6, /* Serial data latch into the registers (Output) */
+		BLANK 	= GPIO_Pin_3, /* Turns off LEDS and signals the start of the Grayscale cycle (Output) */
+		XERR 	= GPIO_Pin_2  /* XERR signals LED overheating (Input) */
 	};
 
 	/* Modes: */
