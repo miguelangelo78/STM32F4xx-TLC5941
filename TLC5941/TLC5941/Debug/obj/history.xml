@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<history>
+   <processor signature="arm-none-eabi-gcc 4.8.1 mingw32 -mcpu=cortex-m4 -mthumb -Wall -ffunction-sections -g -O3 -c -DSTM32F401VC -DSTM32F4XX -DUSE_STDPERIPH_DRIVER -D__ASSEMBLY__ -DSUPPORT_CPLUSPLUS -I..\..\..\workspace\TLC5941\cmsis_lib -I..\..\..\workspace\TLC5941\semihosting -I..\..\..\workspace -I..\..\..\workspace\TLC5941 -I..\..\..\workspace\TLC5941\cmsis_boot -I..\..\.. -I..\..\..\workspace\TLC5941\cmsis_lib\include -I..\..\..\workspace\TLC5941\cmsis">
+      <target file="syscalls.o" lastModified="151370cf377">
+         <source file="..\..\..\syscalls\syscalls.c" lastModified="15136edbded"/>
+      </target>
+      <target file="stm32f4xx_gpio.o" lastModified="151370cf22c">
+         <source file="..\..\..\cmsis_lib\source\stm32f4xx_gpio.c" lastModified="15136ef0a46"/>
+      </target>
+      <target file="stm32f4xx_pwr.o" lastModified="151370cee12">
+         <source file="..\..\..\cmsis_lib\source\stm32f4xx_pwr.c" lastModified="15136eec361"/>
+      </target>
+      <target file="system_stm32f4xx.o" lastModified="151370cf2e4">
+         <source file="..\..\..\cmsis_boot\system_stm32f4xx.c" lastModified="15136ee431d"/>
+      </target>
+      <target file="startup_stm32f4xx.o" lastModified="151370cee81">
+         <source file="..\..\..\cmsis_boot\startup\startup_stm32f4xx.c" lastModified="15136ee4316"/>
+      </target>
+      <target file="main.o" lastModified="151370cefc2">
+         <source file="..\..\..\main.cpp" lastModified="151370cb811"/>
+      </target>
+      <target file="sh_cmd.o" lastModified="151370cf240">
+         <source file="..\..\..\semihosting\sh_cmd.s" lastModified="15136edf341"/>
+      </target>
+      <target file="semihosting.o" lastModified="151370cecf4">
+         <source file="..\..\..\semihosting\semihosting.c" lastModified="15136edf33e"/>
+      </target>
+      <target file="tlcrgb.o" lastModified="151370cf636">
+         <source file="..\..\..\tlcrgb.cpp" lastModified="151370b1e42"/>
+      </target>
+      <target file="tlc5941.o" lastModified="151370cf466">
+         <source file="..\..\..\tlc5941.cpp" lastModified="151370bff04"/>
+      </target>
+      <target file="stm32f4xx_rcc.o" lastModified="151370cf15b">
+         <source file="..\..\..\cmsis_lib\source\stm32f4xx_rcc.c" lastModified="15136ee7d75"/>
+      </target>
+   </processor>
+</history>

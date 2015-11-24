@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<history>
+   <processor signature="4.9.3 -mcpu=cortex-m4 -mthumb -g -Map=TLC5941.map -O3 --gc-sections -lstdc++ -LC:\CooCox\CoIDE\configuration\ProgramData\TLC5941 -TC:\CooCox\CoIDE\configuration\ProgramData\TLC5941/arm-gcc-link.ld -g">
+      <target file="TLC5941.elf" lastModified="151370cf871">
+         <source file="..\obj\semihosting.o" lastModified="151370cecf4"/>
+         <source file="..\obj\stm32f4xx_pwr.o" lastModified="151370cee12"/>
+         <source file="..\obj\startup_stm32f4xx.o" lastModified="151370cee81"/>
+         <source file="..\obj\main.o" lastModified="151370cefc2"/>
+         <source file="..\obj\stm32f4xx_rcc.o" lastModified="151370cf15b"/>
+         <source file="..\obj\stm32f4xx_gpio.o" lastModified="151370cf22c"/>
+         <source file="..\obj\sh_cmd.o" lastModified="151370cf240"/>
+         <source file="..\obj\system_stm32f4xx.o" lastModified="151370cf2e4"/>
+         <source file="..\obj\syscalls.o" lastModified="151370cf377"/>
+         <source file="..\obj\tlc5941.o" lastModified="151370cf466"/>
+         <source file="..\obj\tlcrgb.o" lastModified="151370cf636"/>
+      </target>
+   </processor>
+</history>
